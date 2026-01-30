@@ -12,6 +12,10 @@
 # import necessary libraries
 import random
 
+# I've included the dwyl word list in the same directory as this script, because it's a good comprehensive list of English words.
+# This can be found at: https://github.com/dwyl/english-words
+
+
 # import word list from a file
 def load_word_list(file_path):
 	with open(file_path, 'r') as file:
