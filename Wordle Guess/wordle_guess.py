@@ -1,5 +1,13 @@
 
 # Wordle Guessing Helper Functions
+# Author: Bobby Smith
+# Date: 2026-1-29
+
+# This module provides functions to help filter and suggest possible Wordle guesses based on given constraints.
+# It includes functions to filter words by length, included/excluded letters, and letter positions.
+# It also includes a main function to demonstrate the filtering process step-by-step and through a consolidated function.
+
+# Includes
 
 # import necessary libraries
 import random
