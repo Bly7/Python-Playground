@@ -61,19 +61,19 @@ class Weapon:
 		return total_damage
 
 # Specific weapon classes
-class sword(Weapon):
+class Sword(Weapon):
 	def __init__(self):
 		super().__init__(name="Sword", damage_die=6, number_of_die=1, damage_bonus=2)
-class axe(Weapon):
+class Axe(Weapon):
 	def __init__(self):
 		super().__init__(name="Axe", damage_die=6, number_of_die=2, damage_bonus=0)
-class mace(Weapon):
+class Mace(Weapon):
 	def __init__(self):
 		super().__init__(name="Mace", damage_die=4, number_of_die=2, damage_bonus=1)
-class dagger(Weapon):
+class Dagger(Weapon):
 	def __init__(self):
 		super().__init__(name="Dagger", damage_die=4, number_of_die=1, damage_bonus=0)
-class club(Weapon):
+class Club(Weapon):
 	def __init__(self):
 		super().__init__(name="Club", damage_die=8, number_of_die=1, damage_bonus=0)
 
@@ -85,16 +85,16 @@ class Armor:
 		self.defense_bonus = defense_bonus
 
 # Specific armor classes
-class leather_armor(Armor):
+class Leather_armor(Armor):
 	def __init__(self):
 		super().__init__(name="Leather Armor", defense_bonus=1)
-class chainmail_armor(Armor):
+class Chainmail_armor(Armor):
 	def __init__(self):
 		super().__init__(name="Chainmail Armor", defense_bonus=2)
-class plate_armor(Armor):
+class Plate_armor(Armor):
 	def __init__(self):
 		super().__init__(name="Plate Armor", defense_bonus=4)
-class orc_armor(Armor):
+class Orc_armor(Armor):
 	def __init__(self):
 		super().__init__(name="Orc Armor", defense_bonus=2)
 
@@ -134,25 +134,25 @@ class Unit:
 # Knight class
 class Knight(Unit):
 	def __init__(self):
-		random_weapon = random.choice([sword(), mace()])
-		random_armor = random.choice([chainmail_armor(), plate_armor()])
-		super().__init__(name="Knight", health=100, strength=2, endurance=1, weapon=random_weapon, armor=random_armor)
+		random_weapon = random.choice([Sword(), Mace()])
+		random_armor = random.choice([Chainmail_armor(), Plate_armor()])
+		super().__init__(name="Knight", health=30, strength=2, endurance=1, weapon=random_weapon, armor=random_armor)
 
 # Orc class
 class Orc(Unit):
 	def __init__(self):
-		random_weapon = random.choice([axe(), club(), dagger()])
-		random_armor = orc_armor()
-		super().__init__(name="Orc", health=119, strength=3, endurance=2, weapon=random_weapon, armor=random_armor)
+		random_weapon = random.choice([Axe(), Club(), Dagger()])
+		random_armor = Orc_armor()
+		super().__init__(name="Orc", health=38, strength=3, endurance=2, weapon=random_weapon, armor=random_armor)
 
 
 # Attack calculator function, returns damage dealt
 def attackCalculator(attacker: Unit, defender: Unit) -> int:
 	# Check if either unit is dead or not valid
 	if attacker.isAlive() == False or defender.isAlive() == False:
-		return
+		return 0
 	if attacker is None or defender is None:
-		return
+		return 0
 	
 	# Roll attack and defense
 	attack_roll = attacker.rollAttack()
@@ -160,7 +160,7 @@ def attackCalculator(attacker: Unit, defender: Unit) -> int:
 
 	# Check if attack hits
 	if attack_roll <= defense_roll:
-		return  # Attack missed
+		return 0  # Attack missed
 	
 	# Calculate damage
 	damage = attacker.rollDamage()
@@ -198,16 +198,15 @@ def simulate1Combat(unitA: Unit, unitB: Unit, winners: dict, damage_dealt: dict,
 				print(f"{unit.__class__.__name__} Health: {unit.health}")
 
 		# Each unit attacks in turn
-		for unit in units:
-			# Calcualte attack for A 
-			damage = attackCalculator(units[0], units[1])
-			if damage:
-				damage_dealt[units[0].name] += damage
-			
-			# Calcualte attack for B
-			damage = attackCalculator(units[1], units[0])
-			if damage:
-				damage_dealt[units[1].name] += damage
+		# Calcualte attack for A 
+		damage = attackCalculator(units[0], units[1])
+		if damage:
+			damage_dealt[units[0].name] += damage
+		
+		# Calcualte attack for B
+		damage = attackCalculator(units[1], units[0])
+		if damage:
+			damage_dealt[units[1].name] += damage
 		
 		# Announce deaths
 		if print_debug:
