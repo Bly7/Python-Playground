@@ -85,16 +85,16 @@ class Armor:
 		self.defense_bonus = defense_bonus
 
 # Specific armor classes
-class Leather_armor(Armor):
+class LeatherArmor(Armor):
 	def __init__(self):
 		super().__init__(name="Leather Armor", defense_bonus=1)
-class Chainmail_armor(Armor):
+class ChainmailArmor(Armor):
 	def __init__(self):
 		super().__init__(name="Chainmail Armor", defense_bonus=2)
-class Plate_armor(Armor):
+class PlateArmor(Armor):
 	def __init__(self):
 		super().__init__(name="Plate Armor", defense_bonus=4)
-class Orc_armor(Armor):
+class OrcArmor(Armor):
 	def __init__(self):
 		super().__init__(name="Orc Armor", defense_bonus=2)
 
@@ -135,14 +135,14 @@ class Unit:
 class Knight(Unit):
 	def __init__(self):
 		random_weapon = random.choice([Sword(), Mace()])
-		random_armor = random.choice([Chainmail_armor(), Plate_armor()])
+		random_armor = random.choice([ChainmailArmor(), PlateArmor()])
 		super().__init__(name="Knight", health=30, strength=2, endurance=1, weapon=random_weapon, armor=random_armor)
 
 # Orc class
 class Orc(Unit):
 	def __init__(self):
 		random_weapon = random.choice([Axe(), Club(), Dagger()])
-		random_armor = Orc_armor()
+		random_armor = OrcArmor()
 		super().__init__(name="Orc", health=38, strength=3, endurance=2, weapon=random_weapon, armor=random_armor)
 
 
