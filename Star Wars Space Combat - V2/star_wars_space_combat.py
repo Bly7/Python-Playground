@@ -1,4 +1,22 @@
+# Star Wars Space Combat Simulator - Version 2
+# Author: Bobby Smith
+# Date: 2026-10-15
 
+# A Simulation of combat between X-Wings and TIE Fighters using dice rolls for attacks and damage.
+# It is based on my Star Wars combat simulator framework.
+
+# It simulates many battles and provides statistics on win rates and average damage dealt.
+
+# This is the Second version of the Star Wars Space Combat simulator. Based around trying to group starships
+# into units and have them focuses on unit to unit combat where each side goes independently instead of via
+# alternating individual ship turns
+
+# Objectives:
+# 1. Removed alternating individual ship turns in favor of unit-based combat.
+# 2. Implemented starship units for grouping multiple ships together.
+# 3. Each unit acts independently during its turn.
+# 4. Combat resolution now occurs at the unit level rather than individual ship level.
+# 5. Track unit and ship destruction status.
 
 # Import the random module for dice rolls
 import copy
@@ -103,7 +121,7 @@ class Shield:
 # X-Wing shield subclass
 class XWingShield(Shield):
 	def __init__(self):
-		super().__init__("X-Wing Shield", "Standard X-Wing shield", 10, 1)
+		super().__init__("X-Wing Shield", "Standard X-Wing shield", 10, 2)
 
 
 # Actor class representing any entity in the game world (e.g., starships)
@@ -215,6 +233,7 @@ class Starship:
 			self.hull -= remaining_damage
 
 		if self.hull <= 0:
+			self.hull = 0
 			self.is_destroyed = True
 
 	def isDestroyed(self):
@@ -227,12 +246,12 @@ class Starship:
 # X-Wing starship subclass
 class XWing(Starship):
 	def __init__(self, name):
-		super().__init__(name, "Rebel", 40, 5, 1, [XWingLaserCannon() for _ in range(4)], XWingShield())
+		super().__init__(name, "Rebel", 40, 5, 3, [XWingLaserCannon() for _ in range(4)], XWingShield())
 
 # TIE Fighter starship subclass
 class TIEFighter(Starship):
 	def __init__(self, name):
-		super().__init__(name, "Empire", 25, 7, 7, [TIEFighterLaserCannon() for _ in range(2)])
+		super().__init__(name, "Empire", 35, 7, 6, [TIEFighterLaserCannon() for _ in range(2)])
 
 # Simulates a single combat round where only the attacking starships attack the defending starships
 # NOTHING IS BALANCED FOR THIS, SHOULD MAKE A NEW PROEJCT BALANCED AROUND ATTACKING, DEFENDING
@@ -256,6 +275,13 @@ def createXNumberOfStarships(starship_class, count, faction_prefix):
 # Works the same way as singleFullEngagement, but uses units and alternating combat rounds
 def singleFullEngagementUnitCombat(unit1: Unit, unit2: Unit, verbose=False):
 	rounds = 0
+
+	# randomly choose which order the sides will take their turns
+	rebel_unit, empire_unit = unit1, unit2
+	if random.choice([True, False]):
+		unit1, unit2 = unit2, unit1
+
+
 	if verbose:
 		print("Starting unit combat...")
 		print(f"Unit 1: {len([s for s in unit1.starships if not s.isDestroyed()])} ships remaining")
@@ -302,8 +328,8 @@ def singleFullEngagementUnitCombat(unit1: Unit, unit2: Unit, verbose=False):
 			print()
 		rounds += 1
 
-	rebels_left = len([s for s in unit1.starships if not s.isDestroyed()])
-	empire_left = len([s for s in unit2.starships if not s.isDestroyed()])
+	rebels_left = len([s for s in rebel_unit.starships if not s.isDestroyed()])
+	empire_left = len([s for s in empire_unit.starships if not s.isDestroyed()])
 
 	if verbose:
 		print(f"Total rounds: {rounds}")
